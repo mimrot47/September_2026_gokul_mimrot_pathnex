@@ -1,0 +1,9 @@
+Todyas Task
+2 Hours connect ec2 instance using to local maching
+1 Hour Perform basic commad linux
+2 Hours Wend through the document
+
+
+Tomorrows task
+
+- Perfom change mode advace commads
