@@ -1,12 +1,58 @@
-#moven build
-## Jenkins Pipline - Maven
+#Day 02 Services & Tags
+#Maven build 
+## jenkins Pipeline - Maven build
 
-You will learn how to compile, test and package a java project using maven
+you will learn how to compile, test, and package a java project using maven
 
-pipline {
+pipeline { 
     agent any
     tool {
-          maven 'Maven-3.9.1'
-	  jdk 'JDK-17'
+        maven 'Maven2-8-1'
+        jdk 'JDK - 17'
     }
+    stage('checkout') {
+	steps {
+		git url: 'mygiturl'
+	}
+    stage('Compile') {
+	step { 
+	    sh 'mvn clean compile'
+	 }
+    }
+    stage('Test') {
+	step {
+	    sh 'mvn test'
+         }
+    }
+    stage('Package') {
+	 steps {
+		sh 'mvn package'
+	    }
+        }
 
+## GitLa CI - Mevan Buil
+    stages:
+	- uild
+	- test
+	- package
+   Maven-Build
+   image:maven:3.8.1-jdk-17
+   script:
+     - git clone 'my repo name'
+     - sample-java-app
+     - mvn clean compile
+
+    maven-test:
+	stage:test
+	image:maven:3.0.1-jdk-17
+	script:
+	  - cd sample-java-app
+	  - mvn test
+    maven-package:
+	stage:package
+	image:maven:3.8.1-jdk0-17
+	script:
+	 - cd sample-java-app
+	 - mvn package 
+
+        
