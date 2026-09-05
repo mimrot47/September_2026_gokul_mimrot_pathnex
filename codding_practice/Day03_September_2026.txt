@@ -1,0 +1,64 @@
+
+# Day 03 User SGs Env Vars
+
+## ansile - create user
+
+    name : Create Pathnex user
+    hosts:all
+    become:yes
+
+    tasks:
+       - name: Create user pathnex-admin
+	 user:
+	    name:pathnex-admin
+	    shell: /bin/bash
+
+## Terraform security group r6i4xlarge EC2
+ provider "aws" {
+	region = "us-east-1"
+}
+
+ resource "aws_security_group" "pathnexSG" {
+  	name = "pathnextSG"
+	description = "Pathnex SG for SSH"
+
+	ingress {
+		from_port = 22
+		to_port   = 22
+		protocol = 'tcp'
+		cidr_locks = [0.0.0.0/0]
+		}
+	}
+resource "aws_instance" "PathnexEc2" {
+	ami = "ami-myaminum"
+	instance_type ="r6i.4xlarge"
+	vpc_security_group_ides = [aws_security_group.pathnex.id]
+	
+	tags = {
+		name= 'pathnex-EC2'
+		}
+	}
+
+## kuernetes = add enviroment variales
+
+apiVersion:v1
+kind:pod
+metadata:
+	name:pathnex-env-pod
+spec:
+	containers:
+	 - name:app
+	   image:nginx
+	   env:
+		- name: APP_ENV
+		  value:"production"
+
+## shell script to check file exists
+#!bin/ash
+FILE = "temp/pathnext.html"
+
+if[-f "$FILE"];then
+	echo "file exist"
+    else
+	echo "dile does not exist"
+fi  
