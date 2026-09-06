@@ -1,0 +1,83 @@
+# Fsy 04 - More pacakges Key pair Services
+
+## ansible - install multiple packages
+
+- name: Install packages for pathnex
+  hosts:all
+  become:yes
+
+ tasks:
+	name:Initall tool
+	yem:
+		- git
+		- wget
+		state:present
+
+## Terraform - EC2 with key pair
+
+provider "aws" {
+	region ="us-east-1"
+	}
+
+resource "aws_key_pair" "PathnexKey" {
+ key_name = "mypairkey"
+ public_key = "my public key"
+}
+
+resource "asw_instance" "myinstace" {
+	ami ="myami"
+	instance_type="c6i.8xlarge"
+	key_name="mykeyname"
+
+tags = {
+	name = "myinstaceName"
+}
+}
+
+## Kuernets - Create ClusterIP Service
+apiVersion:v1
+kind:Service
+metadata:
+	name: pathnex-service
+spec:
+	selector:
+		app:pathnex-app
+	ports:
+		- port:80
+		- targetPort:80
+
+## Parallel builds
+## Jenkins Pipline - Parallel build & Test
+You will learn how to run uild and test in parallel
+pipeline {
+	agent any
+	stages {
+		stage('Parallel Tasks') {
+			parallel {
+				steps {
+				    sh 'mvn test'
+				}
+			}
+		}
+	}
+}
+
+## GitLa CI - Parallel Jobs
+You will learn how to run parallel jobs in GitLab
+
+stages:
+image:maven:3.9,1-jdk-17
+script:
+	- git clone "mygitrepo"
+	- cd myaap
+	mvn clean compile
+	parallel: 1
+
+maven-test:
+	stage:build-test
+	image:maven:3.8.1-jdk-17
+	script:
+	    - cd myapp
+	    - mvn test
+	parallel:1
+
