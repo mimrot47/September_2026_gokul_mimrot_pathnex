@@ -1,0 +1,95 @@
+#Day 05 - Handlers, User-Data, Resource Limits
+
+
+## Ansible - Handler to Restart Nginx
+
+name: Manage Nginx
+host: all
+become:yes
+
+tasks:
+	-name: Update config file
+	 copy:
+		src:index.html
+		dest: /user/share/nginx/html/index.html
+		nofify: Restart Ngins
+
+
+
+handlers:
+	- name: Restart Nginx
+	  service:
+		name:nginx
+		state:restarted
+
+
+## Teffaform EC2 with User Data (c6a.12xlarge)
+
+resource "aws_instance" "PathnexEC2" {
+	ami = "ami - myami"
+	instance_type = "c6a.12xlarge"
+	user_data = << EOF
+#!/bin/bash
+yum install -y httpd
+systemctl start httpd
+EOF
+
+tags = {
+	Name = "Pathnex-EC2"
+	}
+}
+
+## Kuernets - Resource Limits
+apiVersion:v1
+kind:Pod
+metadata:
+	name:pathnex-limited-prod
+spec:
+	containers:
+	- name: app
+	  image:nginx
+	  resources:
+	  	limits:
+			memory:"256Mi"
+			cup:"500m"
+
+## Jenkins pipline - use Enviroment Variables
+
+you will learn how to use enviroment variable in jankins piplines
+
+pipline {
+	agent any
+	environment {
+		INSTITUTE_NAME = "Pathnex"
+	}
+	stages {
+		stage('Print') {
+			steps {
+				sh 'echo "welcome to $INSTITUTE_NAME DevOps Traning"'
+			stage('Build') {
+				steps {
+					sh 'mvn clean package - Dinstitutd.name = $INSTITUTE_NAME'
+				}
+			}
+		}
+		}
+	}
+}
+
+## GitLab CI use enviroment variales
+you will learn how to use CI variales in GitLa piplines
+
+stages:
+	- build
+
+variales:
+	INSTITUTE_NAME: "pathnex"
+
+build:
+	stage:build
+	image: maven:3.8.10jdk 17
+	script:
+		- git clone "mycode repo"
+		- cd myapp
+		- echo "Welocome to $INSTITUTE_NAME"
+		- mvn clean package - Dinstitute.name = $INSTITUTE_NAME
