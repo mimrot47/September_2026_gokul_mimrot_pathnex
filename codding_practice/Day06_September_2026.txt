@@ -1,0 +1,87 @@
+# Day 06 DEUG DAY
+
+fix these broken file
+
+## Ansile (fixed)
+- name : Install nginx
+  host : all
+  become:yes
+
+  tasks:
+	- name:Install nginx
+	yum:
+		name: nginx
+		state: present
+
+
+## terraform
+resource "aws_instance" "myinstanceEC2" {
+	ami = "ami-xyzy my id"
+	instance_type = t2.micro
+	vpc_security_group_ids = ["myid "]
+tags = {
+  name = 'myinstanceEC2'
+}
+}
+
+## Kubernetes (fixed)
+apiVersion:v1
+kind:Pod
+metadata:
+    name:pathnex
+spec:
+  containers:
+	- name: myappname
+	  image:nginx
+
+
+# Dubugging piplines
+## jenkins Pipline - Debugging
+
+I will learn how ti fix roken stages and handle errors
+
+pipline {
+    agen : any
+	stage {
+	    stage('checkout') {
+		step {
+		git url: 'myurl'
+		}
+	     }
+	 stage ('Test') {
+		steps {
+		    sh mvn test|| { echo "Testes failed"; exit 1;}
+                }
+         }
+         stage ('build'){
+	       steps{
+		sh mvn clean compile || {echo "Compile failed"; exit 1;}
+               }
+           }
+     }
+}
+
+## gitlab CI Debugging
+
+state:
+ - test
+ - build
+
+test:
+    stage:test
+    image:maven:3.8,1-jdk-17
+    script:
+	- cd myapp
+	- mvn test || {echo "Test Failded"; exit 1;}
+build:
+   stage:build
+   image:maven:3.8.1-jdk-17
+   script:
+      - git clone "myurl"
+      - cd myapp
+      - mvn clean compile || {echo "compile failed";exit 1;}"
+
+
+
+
+  
