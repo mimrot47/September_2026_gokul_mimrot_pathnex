@@ -61,4 +61,56 @@ if[-f "$FILE"];then
 	echo "file exist"
     else
 	echo "dile does not exist"
-fi  
+fi
+
+# Node Build
+## jenkins pipline nodejs build
+pipline {
+	agent any
+	tools {
+		nodejs 'NodeJS-16'
+	}
+	stage {
+	stage ('Checkout') {
+		step {
+			git url:"mygiturl"
+		}
+		stage ('Install Dependincies') {
+			step {
+				sh 'npm install'
+			}
+		stage('Run Tests'){
+			step {
+				sh 'npm run build'
+			}
+		}
+	}
+}
+
+## Gitlab CI - NodeJs Build
+stage:
+	- install
+	- test
+	- build
+
+node-install
+	stage:install
+	image:node:16
+	script:
+		- git clone "repo of application"
+		- cp sample-node-app
+		- npm install
+
+node-test:
+	stage: test
+	image:node:16
+	script:
+		- cd mynodeapp
+		- npm test
+node-build:
+	stage:build
+	image:node:16
+	script:
+		- cd mynodeapp
+		- npm run build
+			 
