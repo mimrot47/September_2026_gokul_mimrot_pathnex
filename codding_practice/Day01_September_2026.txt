@@ -1,9 +1,0 @@
-- name:Install Nginx on rks server
-  hosts:all
-  become:yes
-
-  tasks:
-   - name: Install ngin
-     yum:
-       name:nginx
-       state:present
