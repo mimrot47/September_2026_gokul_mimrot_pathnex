@@ -7,3 +7,18 @@
      yum:
        name:nginx
        state:present
+
+## Terraform Task - Create EC2 (c5.xlarage)
+
+provider "aws" {
+    region = "us-east-1"
+}
+
+resource "aws_instance" "PathnexEC2" {
+    ami = "my ami ID"
+    instance_type = "c5.xlarge"
+
+    tags = {
+    Name = "Pathnex-EC2"
+    }
+}
