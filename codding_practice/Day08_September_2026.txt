@@ -1,0 +1,133 @@
+Day 08 Variables PVC Probes Loops
+
+## Ansible installl packages using variable
+
+name:install packages for pathnex using variables
+host:all
+become:yes
+
+vars:
+    pathnex_packages:
+	- tree
+	- unzip
+	- vim
+
+tasks:
+    name:install requied packages
+     yem:
+	-name: "{{pathnex_packages}"
+         state:present
+# Terraform - Create PVC + Subnet
+
+provide "aws" {
+	region="us-east-1"
+ }
+
+resource "aws_vpc" "Pathnex" {
+	cidr_block = "10.10.0.0/16"
+
+	tags = {
+	Name = "Pathnex-vpc"
+	}
+}
+
+resource "aws_subnet" "pathnexSubnet" {
+ vpc_id = "aws_vpc.pathnexVPC.id"
+ cidr_block = "10.10.1.0/24"
+ map_publish_id_on_launch = true
+  tags= {
+  name= "pathnex_subnet"
+}
+}
+## Kubernetes add liveness & Readines probes
+
+apiVersion:v1
+kind:pod
+metadata:
+    containers:
+	-name:web
+	 image:nginx
+	 livenessProbe:
+	   httpGet:
+		path: /
+		port:80
+	    initialDelaySecond:5
+	readinessProbe:
+	   httpGet:
+	     path:
+             port:80
+initialDelySeconds:3
+
+## shell script - loop through list
+#!bin/bash
+
+for item in pathnex Devops traning; do
+	echo "item:$item" 
+
+do
+
+## jankins pipline conditional execution
+#you will learn how to run stages based on branch or parameter conditions
+#
+
+pipline {
+   agent any
+    parameters {
+	string ( name:'ENVIROMENT', defaultValue:'dev',decription:'Deployment Enviroment')
+   }
+  enviroment {
+	INSTITUTE_NAME = 'pathnex'
+}
+stages {
+  stege ("checkout") {
+    step {
+    git branch: 'main' , url: 'mypsyh'
+    }
+  }
+
+  stage ("Build"){
+      when {
+       branch 'main'
+     }
+     steps {
+   sh 'mvn clen compile'
+    }
+}
+
+	stage("deploy"){
+         when {
+ 	 expression {parms.ENVIROMENT == 'dev'}
+         }
+        steps {
+	   sh 'echo "Deploying to $ENVIROMENT BY $INSTUDE_NAME"'
+	}
+      }
+}
+
+# Gitlab CI conditionl jobs
+you will learn hot to run job based on variables or branches
+
+stges:
+    - build
+    - deploy
+
+build:
+    stage:build
+    image: 'meaven:3.8.1-jdk-17'
+    script:
+       - git clone "myrepo"
+       -  cd my application
+       - mvn clean compile
+    only:
+      main
+
+ deploy:
+  stage:deploy
+  image:alpine:latest
+  script:
+     echo "Deploying to $CI_ENVIROMENT_NAME by pathnex"
+   only:
+    variables:
+     $CI_ENVIROMENT_NAME=="dev"
+ 
+
