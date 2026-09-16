@@ -1,0 +1,64 @@
+#09 Teamplates Internet Getway, ConfigMap, CU Load
+
+## Ansile use jinja2 Teamplates
+ -  name: Deploy template for pathnex
+    hosts:all
+    become:yes
+
+Tasks:
+  -name: copy template file
+   template:
+        src: pathnex.conf.jinja2
+        dist: /etc/pathnex/conf
+
+## Terraform - Internet Getway
+resource "aws_internet_geteway" "pathnexIGW" {
+        vpc_id = aws_vpc.pathnexVPC.vpc_id
+
+        tags = {
+            Name:"pathnex-IGW"
+        }
+}
+
+## kuernetes Create ConfigMap
+
+apiVersion:v1
+kind:ConfigMap
+metadata:
+    name:thenex-config
+data:
+    APP_MODE: "production"
+    WELCOME_MSG : "Hello Pathnex"
+
+## shell Script  Check CPU Load
+
+#!/bin/bash
+LOAD=$(uptime|awk '{print $10}')
+echo "Current CPU Load: $Load"
+
+#Artifacts and archiving
+
+pipeline{
+    agent any {
+        enviroment {
+            INSTITUTE_NAME = "pathnex"
+        }
+    }
+    stages {
+        stage ('Checkout') {
+            steps {
+                git url: 'myurl'
+            }
+        }
+        stage ("build") {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Archive'){
+            steps {
+                archiveArtifacts artifacts: 'target/*jar',fingerprint:true
+            }
+        }
+    }
+}
