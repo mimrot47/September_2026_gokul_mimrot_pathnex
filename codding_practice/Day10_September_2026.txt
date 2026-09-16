@@ -1,0 +1,99 @@
+Day 10  Conditions Route Table SecRet Loops
+
+## Ansible When condition 
+
+
+ -  name: Install tool base on OS
+    hosts:all
+    become:
+        - name : Install htop
+          yem:
+            name:htop
+            state:present 
+        when:ansible_facts['os_family'] == "RedHat"
+
+
+## Terraform - Route Table + Association
+
+resource "aws_route_table" "pathnexRT" {
+    vpc_id = aws_vpc.Pathnex.vpc_id
+    route {
+        cidr_block = "0.0.0.0/0"
+        geteway_id = aws_internet_geteway.PathnexIGW.vpc_id
+    }
+    tags = {
+        Name = "Pathnex-RouteTable"
+    }
+}
+
+resource "aws_route_table_association" "PathnexRTA" {
+    sunet_id = aws_subnet.pathnexSunet.vpc_id
+    route_table_id = aws_route_table.pathnex.id 
+}
+
+## kuernetes - SecRet
+
+apiVersion:v1
+kind:Secret 
+metadata:
+    name:pathnex-Secret
+type:opaque
+data:
+    password: rkspassword== pathnext123base64
+
+## Shell Script  - For loop 1-10
+
+#!/bin/bash
+
+for i in {1..10}; do 
+    echo "Number:$i"
+done
+
+## caching Dependencies
+
+you will learn how to reuse dependencies to speed up builds
+
+pipeline {
+    aget any
+    enviroment {
+        INSTITUTE_NAME = "Pathnex"
+    }
+    stages {
+        stage("Checkout") {
+            steps {
+                git url: 'myapprepo'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                if[-d ".m"]; then
+                    echo "Using cached dependencies"
+                else
+                    mvn clean compile
+                fi
+                '''
+            }
+        }
+
+    }
+}
+
+## GitLab CI cache ependensis 
+
+stages:
+    - build
+
+build:
+    stage:Build
+    image:maven:3.8.1-jdk-17
+    cache:
+        key:meaven-cache
+        paths:
+            - .m2/repository
+        script:
+            - git clone ''
+            - cd sample-java-APP_MODE
+            - mvn clean compile
+    
